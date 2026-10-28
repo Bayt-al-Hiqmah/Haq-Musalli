@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Empowerment Mauritius | Bayt Al-Hikmah</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital@0;1&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        /* Accordion transition utility */
+        .content-toggle-zone {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 330ms cubic-bezier(0.4, 0, 0.2, 1), opacity 300ms ease;
+            opacity: 0;
+        }
+        .content-toggle-zone.expanded {
+            grid-template-rows: 1fr;
+            opacity: 1;
+        }
+        .content-inner {
+            overflow: hidden;
+        }
+        
+        /* Smooth fade animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Custom scrollbar matching Bayt Al-Hikmah theme */
+        .premium-scrollbar::-webkit-scrollbar,
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 6px;
+            width: 6px;
+        }
+        .premium-scrollbar::-webkit-scrollbar-track,
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 999px;
+        }
+        .premium-scrollbar::-webkit-scrollbar-thumb,
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(212, 175, 55, 0.25);
+            border-radius: 999px;
+        }
+        .premium-scrollbar::-webkit-scrollbar-thumb:hover,
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(212, 175, 55, 0.5);
+        }
+
+        /* Glassmorphism Card Styling */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+        }
+        .glass-card:hover {
+            border-color: rgba(212, 175, 55, 0.4);
+            box-shadow: 0 10px 30px -10px rgba(212, 175, 55, 0.1);
+        }
+    </style>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                        arabic: ['Amiri', 'serif'],
+                    },
+                    colors: {
+                        slate: { 950: '#0b1329' },
+                        gold: { 100: '#f4ebd0', 400: '#d4af37', 500: '#aa7c11' },
+                        emeraldCustom: { 800: '#064e3b', 900: '#022c22' }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans selection:bg-gold-400 selection:text-slate-950 antialiased overflow-x-hidden min-h-screen flex flex-col justify-between">
+    
+    <!-- NAVIGATION BAR -->
+    <nav id="main-nav" class="fixed top-0 left-0 w-full z-40 bg-slate-950/90 backdrop-blur-md border-b border-white/5">
+        <div class="px-4 sm:px-6 lg:px-16 pt-2 pb-2 flex justify-between items-center gap-2">
+            <div class="px-2 py-2 rounded-lg border border-white/10 bg-white/[0.02] backdrop-blur-sm hover:border-gold-400/30 hover:bg-gold-400/[0.02] transition-all duration-300 leading-[1.0]">
+                <a href="index.html" class="text-base sm:text-lg font-arabic font-semibold tracking-widest text-white hover:text-gold-400 transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-left text-xs text-gold-400"></i>
+                    Bayt <span class="text-gold-400">al Hikmah</span>
+                </a>
+            </div>
+
+            <div class="hidden lg:flex items-center space-x-6 text-xs font-medium tracking-widest uppercase text-slate-400">
+                <a href="#civic-rights" class="hover:text-gold-400 transition-colors py-2">Civic & Constitutional Rights</a>
+                <a href="#family-law" class="hover:text-gold-400 transition-colors py-2">Family & Civil Code</a>
+                <a href="#fard-audit" class="hover:text-gold-400 transition-colors py-2">Fard Kifayah Audit</a>
+                <a href="#governance-waqf" class="hover:text-gold-400 transition-colors py-2">Waqf Governance</a>
+                <a href="#age-curriculum" class="hover:text-gold-400 transition-colors py-2">Learning Paths</a>
+            </div>
+            
+            <div class="flex items-center gap-3 flex-shrink-0 ml-auto lg:ml-0">
+                <button onclick="openToolkitModal()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gold-400/30 bg-gold-400/10 text-gold-400 hover:bg-gold-400 hover:text-slate-950 transition-all text-xs font-mono font-semibold cursor-pointer">
+                    <i class="fa-solid fa-folder-open"></i> <span class="hidden sm:inline">Legal Toolkit</span>
+                </button>
+                <div class="relative inline-block text-left flex-shrink-0">
+                    <select id="lang-selector" class="bg-slate-900 text-gold-400 text-[10px] sm:text-xs border border-gold-400/20 rounded-md px-1.5 sm:px-2.5 py-1.5 focus:outline-none focus:border-gold-400/60 font-mono cursor-pointer transition-colors">
+                        <option value="en">EN</option>
+                        <option value="ar">AR</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header class="relative min-h-[50vh] flex items-center justify-center pt-28 pb-16 overflow-hidden px-4 border-b border-white/10">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(6,78,59,0.25),transparent_75%)]"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_50%,#0b1329_100%)]"></div>
+        
+        <div class="max-w-4xl text-center relative z-10 space-y-5 flex flex-col items-center">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-gold-400/30 bg-gold-400/10 text-gold-400 text-xs font-mono uppercase tracking-widest">
+                <i class="fa-solid fa-flag text-gold-400"></i> Mauritius Civic & Religious Empowerment Framework
+            </div>
+
+            <h1 class="text-3xl sm:text-5xl lg:text-6xl font-serif text-white font-bold tracking-tight leading-tight">
+                Empowering Muslim Communities in <span class="text-gold-400">Mauritius</span>
+            </h1>
+
+            <div class="font-arabic text-xl sm:text-2xl text-emerald-400 tracking-wider" dir="rtl">
+                مَبَادِرَة تَمْكِين المَجْتَمَع المَوْرِيشِي: الحُقُوق وَالوَاجِبَات
+            </div>
+
+            <p class="max-w-2xl text-xs sm:text-sm text-slate-300 font-light leading-relaxed">
+                Bridging **Secular Civic Rights** under the Mauritian Constitution and Civil Code with **Religious Obligations (*Fiqh & Fard Kifayah*)** for all generations across our island.
+            </p>
+
+            <div class="h-[1px] w-24 bg-gradient-to-r from-transparent via-gold-400 to-transparent my-2"></div>
+
+            <!-- SEARCH BAR COMPONENT -->
+            <div class="w-full max-w-xl pt-2">
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gold-400/70 text-sm"></i>
+                    <input type="text" id="global-search-input" onkeyup="filterKnowledgeBase()" placeholder="Search legal rights, Jummah leave, Nikah registration, Waqf laws, or Wills..." class="w-full bg-slate-900/90 border border-gold-400/30 rounded-full pl-11 pr-4 py-3 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-gold-400 focus:ring-1 focus:ring-gold-400 transition-all shadow-xl">
+                </div>
+                <div id="search-feedback" class="text-[11px] font-mono text-slate-400 mt-2 hidden">Searching topics...</div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-20 flex-grow">
+
+        <!-- SECTION 1: CONSTITUTIONAL & CIVIC RIGHTS -->
+        <section id="civic-rights" class="searchable-section space-y-8">
+            <div class="border-b border-gold-400/20 pb-4">
+                <div class="flex items-center gap-2 text-xs font-mono text-gold-400 uppercase tracking-widest">
+                    <i class="fa-solid fa-scale-balanced"></i> Dimension 01 • Secular Civic Laws
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-serif text-white font-bold mt-1">Constitutional & Civic Rights in Mauritius</h2>
+                <p class="text-xs text-slate-400 font-light mt-1">Understanding your protected freedoms as a Mauritian citizen under national legislation.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Card 1: Section 11 -->
+                <div class="glass-card rounded-2xl p-6 space-y-4 searchable-item">
+                    <div class="flex items-center justify-between">
+                        <span class="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center font-mono font-bold text-xs">S.11</span>
+                        <span class="text-[10px] font-mono text-gold-400 uppercase tracking-wider">Constitution of Mauritius</span>
+                    </div>
+                    <h3 class="text-lg font-serif font-bold text-white">Freedom of Conscience & Religious Practice</h3>
+                    <p class="text-xs text-slate-300 font-light leading-relaxed">
+                        Section 11 guarantees every citizen the right to freedom of thought, conscience, and religion. This includes the right to manifest faith in public or private through worship, teaching, practice, and observance.
+                    </p>
+                    <ul class="space-y-2 text-xs text-slate-400 font-light">
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-check text-emerald-400 text-[10px] mt-1"></i>
+                            <span><strong>Religious Attire (Hijab/Headscarf):</strong> Legally protected in public schools, tertiary institutions, and government workplaces.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-check text-emerald-400 text-[10px] mt-1"></i>
+                            <span><strong>Freedom of Assembly:</strong> Unrestricted right to assemble for daily and Friday (*Jummah*) prayers without state hindrance.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Card 2: Section 3 -->
+                <div class="glass-card rounded-2xl p-6 space-y-4 searchable-item">
+                    <div class="flex items-center justify-between">
+                        <span class="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center font-mono font-bold text-xs">S.3</span>
+                        <span class="text-[10px] font-mono text-gold-400 uppercase tracking-wider">Protection Against Discrimination</span>
+                    </div>
+                    <h3 class="text-lg font-serif font-bold text-white">Protection from Discrimination & Creed Bias</h3>
+                    <p class="text-xs text-slate-300 font-light leading-relaxed">
+                        Section 3 establishes fundamental rights without discrimination based on race, place of origin, political opinions, color, creed, or sex.
+                    </p>
+                    <ul class="space-y-2 text-xs text-slate-400 font-light">
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-check text-emerald-400 text-[10px] mt-1"></i>
+                            <span><strong>Equal Access:</strong> Guarantees equal access to public employment, housing, legal representation, and judicial proceedings.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-check text-emerald-400 text-[10px] mt-1"></i>
+                            <span><strong>Legal Recourse:</strong> Victims of religious bias can petition the Equal Opportunities Commission (EOC) or Supreme Court.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Card 3: Employment Law -->
+                <div class="glass-card rounded-2xl p-6 space-y-4 searchable-item">
+                    <div class="flex items-center justify-between">
+                        <span class="w-9 h-9 rounded-lg bg-gold-400/10 border border-gold-400/20 text-gold-400 flex items-center justify-center font-mono font-bold text-xs"><i class="fa-solid fa-briefcase"></i></span>
+                        <span class="text-[10px] font-mono text-gold-400 uppercase tracking-wider">Workers' Rights Act 2019</span>
+                    </div>
+                    <h3 class="text-lg font-serif font-bold text-white">Workplace Rights & Religious Leave</h3>
+                    <p class="text-xs text-slate-300 font-light leading-relaxed">
+                        Mauritian labor legislation grants reasonable accommodations for religious observances and statutory leaves for major festivals.
+                    </p>
+                    <ul class="space-y-2 text-xs text-slate-400 font-light">
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-check text-gold-400 text-[10px] mt-1"></i>
+                            <span><strong>Jummah Break Accommodations:</strong> Employees can formally request extended lunch breaks for Friday prayers under workplace flexibility rules.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-check text-gold-400 text-[10px] mt-1"></i>
+                            <span><strong>Eid Public Holidays:</strong> Statutory leave guaranteed for official national holidays including Eid-ul-Fitr.</span>
+                        </li>
+                    </ul>
+                    <button onclick="copyLeaveLetterTemplate()" class="inline-flex items-center gap-1.5 text-xs font-mono text-gold-400 hover:text-gold-300 pt-2 cursor-pointer">
+                        <i class="fa-solid fa-copy"></i> Copy Formal Employee Request Template
+                    </button>
+                </div>
+
+                <!-- Card 4: Halal Consumer Rights -->
+                <div class="glass-card rounded-2xl p-6 space-y-4 searchable-item">
+                    <div class="flex items-center justify-between">
+                        <span class="w-9 h-9 rounded-lg bg-gold-400/10 border border-gold-400/20 text-gold-400 flex items-center justify-center font-mono font-bold text-xs"><i class="fa-solid fa-utensils"></i></span>
+                        <span class="text-[10px] font-mono text-gold-400 uppercase tracking-wider">Consumer Protection Act</span>
+                    </div>
+                    <h3 class="text-lg font-serif font-bold text-white">Halal Certification & Consumer Rights</h3>
+                    <p class="text-xs text-slate-300 font-light leading-relaxed">
+                        Protection against deceptive labeling and false advertising regarding Halal slaughter and dietary standards in commercial trade across Mauritius.
+                    </p>
+                    <ul class="space-y-2 text-xs text-slate-400 font-light">
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-check text-gold-400 text-[10px] mt-1"></i>
+                            <span><strong>Authentic Certification:</strong> Ensuring products claiming Halal status carry accredited certifications (e.g., Jummah Mosque Halal Committee).</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-check text-gold-400 text-[10px] mt-1"></i>
+                            <span><strong>Misrepresentation Claims:</strong> Right to report false Halal labeling to the Ministry of Commerce & Consumer Protection.</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 2: FAMILY STATUS & CIVIL CODE -->
+        <section id="family-law" class="searchable-section space-y-8">
+            <div class="border-b border-gold-400/20 pb-4">
+                <div class="flex items-center gap-2 text-xs font-mono text-gold-400 uppercase tracking-widest">
+                    <i class="fa-solid fa-heart-circle-bolt"></i> Dimension 02 • Family & Personal Law
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-serif text-white font-bold mt-1">Nikah Registration & Mauritian Civil Code</h2>
+                <p class="text-xs text-slate-400 font-light mt-1">Harmonizing religious marriage (*Nikah*) and inheritance (*Wasiyyah*) with Mauritian Civil Law.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <!-- Nikah vs Civil Status Act -->
+                <div class="glass-card rounded-2xl p-6 space-y-5 searchable-item">
+                    <div class="flex justify-between items-center border-b border-white/10 pb-3">
+                        <h3 class="text-xl font-serif font-bold text-white">Nikah & Civil Status Act Registration</h3>
+                        <span class="font-arabic text-emerald-400 text-base" dir="rtl">الزواج الشرعي والمدني</span>
+                    </div>
+
+                    <p class="text-xs text-slate-300 leading-relaxed font-light">
+                        Under the **Civil Status Act of Mauritius**, a purely religious *Nikah* solemnized without an authorized Civil Status Officer or registered Muslim Civil Status Officer does not automatically confer civil legal protections to the spouse or children regarding inheritance, survivor benefits, or civil maintenance.
+                    </p>
+
+                    <div class="p-4 rounded-xl bg-slate-950/80 border border-amber-500/20 space-y-3">
+                        <div class="text-xs font-bold font-mono text-amber-400 uppercase">Mandatory Steps for Full Legal Protection</div>
+                        <ol class="space-y-2 text-xs text-slate-300 font-light list-decimal list-inside">
+                            <li>Ensure the officiating Imam is an officially appointed <strong>Muslim Civil Status Officer</strong> in Mauritius.</li>
+                            <li>Publish marriage banns at the local Civil Status Office 10 days prior to solemnization.</li>
+                            <li>Verify that two adult witnesses sign both the civil register and the Islamic *Nikah-Nama*.</li>
+                            <li>Obtain the official Civil Marriage Certificate to secure civil inheritance and estate rights.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Islamic Wills (Wasiyyah) -->
+                <div class="glass-card rounded-2xl p-6 space-y-5 searchable-item">
+                    <div class="flex justify-between items-center border-b border-white/10 pb-3">
+                        <h3 class="text-xl font-serif font-bold text-white">Islamic Wills (*Wasiyyah*) & Civil Code</h3>
+                        <span class="font-arabic text-emerald-400 text-base" dir="rtl">الوصية والميراث</span>
+                    </div>
+
+                    <p class="text-xs text-slate-300 leading-relaxed font-light">
+                        The **Mauritian Code Civil (Napoleonic Framework)** enforces the concept of <em>"Réserve Héréditaire"</em> (statutory reserved share for direct heirs). To execute a Shariah-compliant estate distribution without violating Mauritian law:
+                    </p>
+
+                    <div class="space-y-3 text-xs">
+                        <div class="p-3 rounded-lg bg-slate-950 border border-white/5 space-y-1">
+                            <span class="font-bold text-gold-400 font-mono block">1. Non-Heir Bequest Limit (Max 1/3)</span>
+                            <p class="text-slate-400 font-light">Islamic Law permits bequeathing up to 1/3 (*Wasiyyah*) of total wealth to non-statutory heirs or charities. This fits within the disposable portion (*Quotité Disponible*) under the Code Civil.</p>
+                        </div>
+
+                        <div class="p-3 rounded-lg bg-slate-950 border border-white/5 space-y-1">
+                            <span class="font-bold text-emerald-400 font-mono block">2. Notarized Mutual Consent Framework</span>
+                            <p class="text-slate-400 font-light">Heirs can execute a notarized agreement (*Acte Notarié*) during estate settlement to voluntarily redistribute shares in accordance with Islamic *Mirath* principles.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 3: FARD KIFAYAH AUDIT SIMULATOR -->
+        <section id="fard-audit" class="searchable-section space-y-8">
+            <div class="border-b border-gold-400/20 pb-4">
+                <div class="flex items-center gap-2 text-xs font-mono text-gold-400 uppercase tracking-widest">
+                    <i class="fa-solid fa-list-check"></i> Dimension 03 • Interactive Community Governance
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-serif text-white font-bold mt-1">Fard Kifayah Community Audit Simulator</h2>
+                <p class="text-xs text-slate-400 font-light mt-1">Interactive self-audit tool for Mosque Committees, Waqf Trustees, and Islamic Societies in Mauritius.</p>
+            </div>
+
+            <!-- Fard 'Ayn vs Fard Kifayah Table -->
+            <div class="glass-card rounded-2xl p-6 space-y-4">
+                <h3 class="text-lg font-serif font-bold text-white">Distinguishing Individual vs. Communal Ethical Duties</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs border-collapse min-w-[600px]">
+                        <thead>
+                            <tr class="border-b border-white/10 font-mono text-gold-400 uppercase text-[10px] bg-slate-950">
+                                <th class="p-3">Category</th>
+                                <th class="p-3">Individual Duty (Fard 'Ayn)</th>
+                                <th class="p-3">Communal Duty (Fard Kifayah)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-white/5 text-slate-300 font-light">
+                            <tr>
+                                <td class="p-3 font-semibold text-white">Scope & Accountability</td>
+                                <td class="p-3">Binding on every capable individual. Non-transferable.</td>
+                                <td class="p-3">Binding on the community as a collective whole.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-semibold text-white">Religious Examples</td>
+                                <td class="p-3">Five daily prayers, Ramadan fasting, personal Zakat.</td>
+                                <td class="p-3">Funeral prayers (*Janazah*), establishing mosques, maintaining burial sites (*Mabara*).</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-semibold text-white">Civic & Social Examples</td>
+                                <td class="p-3">Honesty in contracts, neighborly kindness, refraining from harm.</td>
+                                <td class="p-3">Poverty relief funds (*Bait-ul-Mal*), training doctors/teachers, dispute mediation (*Sulh*).</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Interactive Checklist Tool -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                
+                <div class="lg:col-span-7 glass-card rounded-2xl p-6 space-y-6">
+                    <div class="flex justify-between items-center border-b border-white/10 pb-3">
+                        <div>
+                            <h3 class="text-lg font-serif font-bold text-white">Societal Readiness Checklist</h3>
+                            <p class="text-xs text-slate-400 font-light">Tick all communal duties currently fulfilled in your local district/mosque.</p>
+                        </div>
+                        <button onclick="resetAuditChecklist()" class="text-[10px] font-mono uppercase bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white px-2.5 py-1.5 rounded border border-white/10 transition-colors">
+                            Reset Form
+                        </button>
+                    </div>
+
+                    <div class="space-y-4 text-xs">
+                        
+                        <!-- Item 1 -->
+                        <label class="flex items-start gap-3 p-3 rounded-lg bg-slate-950/60 border border-white/5 hover:border-gold-400/30 transition-colors cursor-pointer">
+                            <input type="checkbox" onchange="calculateAuditScore()" class="audit-checkbox mt-0.5 w-4 h-4 rounded accent-gold-400 bg-slate-900 border-white/10 cursor-pointer">
+                            <div>
+                                <span class="font-bold text-white block">1. 24/7 Janazah & Ghusl Readiness</span>
+                                <span class="text-slate-400 font-light">Dedicated ritual washing facilities with trained male and female washers available immediately.</span>
+                            </div>
+                        </label>
+
+                        <!-- Item 2 -->
+                        <label class="flex items-start gap-3 p-3 rounded-lg bg-slate-950/60 border border-white/5 hover:border-gold-400/30 transition-colors cursor-pointer">
+                            <input type="checkbox" onchange="calculateAuditScore()" class="audit-checkbox mt-0.5 w-4 h-4 rounded accent-gold-400 bg-slate-900 border-white/10 cursor-pointer">
+                            <div>
+                                <span class="font-bold text-white block">2. Structured Youth Madrasah & Adult Education</span>
+                                <span class="text-slate-400 font-light">Active classes teaching Qur'an, ethics, and civil rights for both youth and adult demographics.</span>
+                            </div>
+                        </label>
+
+                        <!-- Item 3 -->
+                        <label class="flex items-start gap-3 p-3 rounded-lg bg-slate-950/60 border border-white/5 hover:border-gold-400/30 transition-colors cursor-pointer">
+                            <input type="checkbox" onchange="calculateAuditScore()" class="audit-checkbox mt-0.5 w-4 h-4 rounded accent-gold-400 bg-slate-900 border-white/10 cursor-pointer">
+                            <div>
+                                <span class="font-bold text-white block">3. Transparent Local Bait-ul-Mal & Zakat Census</span>
+                                <span class="text-slate-400 font-light">Confidential register of local vulnerable families with audited Zakat distribution.</span>
+                            </div>
+                        </label>
+
+                        <!-- Item 4 -->
+                        <label class="flex items-start gap-3 p-3 rounded-lg bg-slate-950/60 border border-white/5 hover:border-gold-400/30 transition-colors cursor-pointer">
+                            <input type="checkbox" onchange="calculateAuditScore()" class="audit-checkbox mt-0.5 w-4 h-4 rounded accent-gold-400 bg-slate-900 border-white/10 cursor-pointer">
+                            <div>
+                                <span class="font-bold text-white block">4. Conflict Resolution & Sulh Reconciliation Board</span>
+                                <span class="text-slate-400 font-light">Trained community mediators resolving marital and neighborhood disputes prior to litigation.</span>
+                            </div>
+                        </label>
+
+                        <!-- Item 5 -->
+                        <label class="flex items-start gap-3 p-3 rounded-lg bg-slate-950/60 border border-white/5 hover:border-gold-400/30 transition-colors cursor-pointer">
+                            <input type="checkbox" onchange="calculateAuditScore()" class="audit-checkbox mt-0.5 w-4 h-4 rounded accent-gold-400 bg-slate-900 border-white/10 cursor-pointer">
+                            <div>
+                                <span class="font-bold text-white block">5. Legal Registration & Annual Financial Audits</span>
+                                <span class="text-slate-400 font-light">Registered under Registrar of Associations Act with annual financial statements published.</span>
+                            </div>
+                        </label>
+
+                        <!-- Item 6 -->
+                        <label class="flex items-start gap-3 p-3 rounded-lg bg-slate-950/60 border border-white/5 hover:border-gold-400/30 transition-colors cursor-pointer">
+                            <input type="checkbox" onchange="calculateAuditScore()" class="audit-checkbox mt-0.5 w-4 h-4 rounded accent-gold-400 bg-slate-900 border-white/10 cursor-pointer">
+                            <div>
+                                <span class="font-bold text-white block">6. Women & Youth Inclusion in Governance</span>
+                                <span class="text-slate-400 font-light">Accessible prayer facilities, educational spaces, and consultative input for women and youth.</span>
+                            </div>
+                        </label>
+
+                    </div>
+                </div>
+
+                <!-- Live Result Dashboard -->
+                <div class="lg:col-span-5 glass-card rounded-2xl p-6 space-y-6 sticky top-24">
+                    <div>
+                        <div class="text-[10px] font-mono text-gold-400 uppercase tracking-widest">Live Assessment Engine</div>
+                        <h4 class="text-xl font-serif font-bold text-white mt-1">Communal Compliance Rating</h4>
+                    </div>
+
+                    <div class="text-center py-4 bg-slate-950/80 rounded-xl border border-white/10 space-y-2">
+                        <div id="audit-score-percentage" class="text-4xl sm:text-5xl font-bold font-mono text-gold-400">0%</div>
+                        <div id="audit-score-status" class="text-xs font-mono uppercase text-slate-400 tracking-wider">Unassessed / Critical Gaps</div>
+                        <div class="w-4/5 mx-auto bg-slate-900 h-2 rounded-full overflow-hidden mt-2">
+                            <div id="audit-score-bar" class="bg-gradient-to-r from-red-500 via-amber-400 to-emerald-400 h-full transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div id="audit-feedback-text" class="text-xs text-slate-300 font-light leading-relaxed p-4 rounded-lg bg-slate-950 border border-white/5">
+                        Select the checkboxes representing fulfilled communal obligations in your local area to generate an instant governance rating.
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 4: LOCAL SOCIETY & WAQF GOVERNANCE -->
+        <section id="governance-waqf" class="searchable-section space-y-8">
+            <div class="border-b border-gold-400/20 pb-4">
+                <div class="flex items-center gap-2 text-xs font-mono text-gold-400 uppercase tracking-widest">
+                    <i class="fa-solid fa-building-columns"></i> Dimension 04 • Organizational Stewardship
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-serif text-white font-bold mt-1">Local Society & Waqf Governance (Mauritius)</h2>
+                <p class="text-xs text-slate-400 font-light mt-1">Statutory compliance, property management, and financial integrity for Islamic associations.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- Pillar 1: Registrar of Associations -->
+                <div class="glass-card rounded-2xl p-6 space-y-4 searchable-item">
+                    <div class="w-10 h-10 rounded-xl bg-gold-400/10 border border-gold-400/20 text-gold-400 flex items-center justify-center font-bold text-base">
+                        <i class="fa-solid fa-file-contract"></i>
+                    </div>
+                    <h3 class="text-lg font-serif font-bold text-white">Registrar of Associations Act</h3>
+                    <p class="text-xs text-slate-300 font-light leading-relaxed">
+                        Every Muslim Society or Mosque Committee in Mauritius must comply with mandatory statutory obligations:
+                    </p>
+                    <ul class="space-y-2 text-xs text-slate-400 font-light">
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-chevron-right text-gold-400 text-[10px] mt-1"></i>
+                            <span>Filing annual audited financial statements before statutory deadlines.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-chevron-right text-gold-400 text-[10px] mt-1"></i>
+                            <span>Holding democratic Annual General Meetings (AGM) with verified voter lists.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Pillar 2: Waqf Property Management -->
+                <div class="glass-card rounded-2xl p-6 space-y-4 searchable-item">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-base">
+                        <i class="fa-solid fa-land-mine-on-surface"></i>
+                    </div>
+                    <h3 class="text-lg font-serif font-bold text-white">Board of Waqf & Asset Protection</h3>
+                    <p class="text-xs text-slate-300 font-light leading-relaxed">
+                        Managing endowed properties (*Waqf*) according to sacred intent and Mauritian legal framework:
+                    </p>
+                    <ul class="space-y-2 text-xs text-slate-400 font-light">
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-chevron-right text-emerald-400 text-[10px] mt-1"></i>
+                            <span>Registering all real estate endowments with the official Waqf Board.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-chevron-right text-emerald-400 text-[10px] mt-1"></i>
+                            <span>Ensuring commercial rent from Waqf properties matches fair market valuations.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Pillar 3: Financial Transparency -->
+                <div class="glass-card rounded-2xl p-6 space-y-4 searchable-item">
+                    <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-base">
+                        <i class="fa-solid fa-vault"></i>
+                    </div>
+                    <h3 class="text-lg font-serif font-bold text-white">Cash Controls & Internal Audit</h3>
+                    <p class="text-xs text-slate-300 font-light leading-relaxed">
+                        Preventing mismanagement and upholding public trust (*Amanah*) through strict cash controls:
+                    </p>
+                    <ul class="space-y-2 text-xs text-slate-400 font-light">
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-chevron-right text-blue-400 text-[10px] mt-1"></i>
+                            <span>Dual-custody verification for all Friday collection box (*Lequete*) counts.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-chevron-right text-blue-400 text-[10px] mt-1"></i>
+                            <span>Mandatory bank deposits instead of holding unrecorded cash reserves.</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 5: AGE-TAILORED LEARNING PATHS -->
+        <section id="age-curriculum" class="searchable-section space-y-8">
+            <div class="border-b border-gold-400/20 pb-4">
+                <div class="flex items-center gap-2 text-xs font-mono text-gold-400 uppercase tracking-widest">
+                    <i class="fa-solid fa-graduation-cap"></i> Dimension 05 • Generational Syllabus
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-serif text-white font-bold mt-1">Age-Tailored Learning Paths</h2>
+                <p class="text-xs text-slate-400 font-light mt-1">Curated educational objectives tailored for youth, working adults, and community elders in Mauritius.</p>
+            </div>
+
+            <!-- Tab Buttons -->
+            <div class="flex flex-wrap gap-3 border-b border-white/10 pb-4">
+                <button onclick="switchAgeTab('youth')" id="tab-btn-youth" class="age-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all bg-gold-400 text-slate-950">
+                    Young Learners & Teens (Ages 7–16)
+                </button>
+                <button onclick="switchAgeTab('adults')" id="tab-btn-adults" class="age-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all bg-slate-900 border border-white/10 text-slate-400 hover:text-white">
+                    Adults & Professionals (Ages 17–55)
+                </button>
+                <button onclick="switchAgeTab('elders')" id="tab-btn-elders" class="age-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all bg-slate-900 border border-white/10 text-slate-400 hover:text-white">
+                    Elders & Trustees (Ages 56+)
+                </button>
+            </div>
+
+            <!-- Tab Contents -->
+            <div id="tab-content-youth" class="age-tab-content glass-card rounded-2xl p-6 sm:p-8 space-y-4 animate-fade-in">
+                <h3 class="text-xl font-serif font-bold text-gold-400">Youth Curriculum: Identity, Rights & Good Citizenship</h3>
+                <p class="text-xs text-slate-300 leading-relaxed font-light">
+                    Building a confident Mauritian Muslim identity while understanding rights in educational institutions and obligations toward non-Muslim neighbors.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-3 text-xs">
+                    <div class="p-4 rounded-xl bg-slate-950 border border-white/5 space-y-2">
+                        <span class="font-bold text-white block"><i class="fa-solid fa-school text-emerald-400 mr-1.5"></i> Rights at School</span>
+                        <p class="text-slate-400 font-light">Expressing faith comfortably (Hijab, breaktime prayers) under Section 11 of the Mauritian Constitution.</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-slate-950 border border-white/5 space-y-2">
+                        <span class="font-bold text-white block"><i class="fa-solid fa-apple-whole text-amber-400 mr-1.5"></i> Halal Awareness</span>
+                        <p class="text-slate-400 font-light">Understanding dietary principles in school canteens and commercial food outlets.</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-slate-950 border border-white/5 space-y-2">
+                        <span class="font-bold text-white block"><i class="fa-solid fa-seedling text-teal-400 mr-1.5"></i> Civic Stewardship</span>
+                        <p class="text-slate-400 font-light">Environmental responsibility (*Khilafah*) and active participation in local beach and village cleanups.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-content-adults" class="age-tab-content hidden glass-card rounded-2xl p-6 sm:p-8 space-y-4 animate-fade-in">
+                <h3 class="text-xl font-serif font-bold text-emerald-400">Adult Curriculum: Workplace Rights, Family Law & Ethical Finance</h3>
+                <p class="text-xs text-slate-300 leading-relaxed font-light">
+                    Empowering working professionals and parents to navigate civil legal frameworks while maintaining strict adherence to Islamic ethics.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-3 text-xs">
+                    <div class="p-4 rounded-xl bg-slate-950 border border-white/5 space-y-2">
+                        <span class="font-bold text-white block"><i class="fa-solid fa-briefcase text-gold-400 mr-1.5"></i> Labor Rights</span>
+                        <p class="text-slate-400 font-light">Navigating Jummah prayer leave requests and protection against discrimination under the Workers' Rights Act.</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-slate-950 border border-white/5 space-y-2">
+                        <span class="font-bold text-white block"><i class="fa-solid fa-scroll text-blue-400 mr-1.5"></i> Marriage & Inheritance</span>
+                        <p class="text-slate-400 font-light">Registering Nikah under the Civil Status Act and executing Shariah-compliant Wills (*Wasiyyah*).</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-slate-950 border border-white/5 space-y-2">
+                        <span class="font-bold text-white block"><i class="fa-solid fa-coins text-emerald-400 mr-1.5"></i> Ethical Finance</span>
+                        <p class="text-slate-400 font-light">Calculating Zakat on local and foreign assets and seeking Shariah-compliant banking/investments in Mauritius.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-content-elders" class="age-tab-content hidden glass-card rounded-2xl p-6 sm:p-8 space-y-4 animate-fade-in">
+                <h3 class="text-xl font-serif font-bold text-amber-400">Elders & Trustees Curriculum: Institutional Governance & Mentorship</h3>
+                <p class="text-xs text-slate-300 leading-relaxed font-light">
+                    Equipping mosque committees, Waqf trustees, and senior citizens with institutional tools for transparent management and dispute mediation.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-3 text-xs">
+                    <div class="p-4 rounded-xl bg-slate-950 border border-white/5 space-y-2">
+                        <span class="font-bold text-white block"><i class="fa-solid fa-landmark text-amber-400 mr-1.5"></i> Waqf Management</span>
+                        <p class="text-slate-400 font-light">Fulfilling legal duties under the Board of Waqf and Registrar of Associations Act.</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-slate-950 border border-white/5 space-y-2">
+                        <span class="font-bold text-white block"><i class="fa-solid fa-handshake text-emerald-400 mr-1.5"></i> Conflict Mediation</span>
+                        <p class="text-slate-400 font-light">Establishing structured arbitration (*Sulh*) to resolve family and property disputes outside civil courts.</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-slate-950 border border-white/5 space-y-2">
+                        <span class="font-bold text-white block"><i class="fa-solid fa-people-roof text-gold-400 mr-1.5"></i> Youth Succession</span>
+                        <p class="text-slate-400 font-light">Mentoring younger generations to take over committee roles with administrative integrity.</p>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- LEGAL TOOLKIT MODAL -->
+    <div id="toolkit-modal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 animate-fade-in">
+        <div class="bg-slate-900 border border-gold-400/30 rounded-2xl max-w-3xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+            
+            <div class="p-5 border-b border-white/10 flex items-center justify-between bg-slate-900/90">
+                <div class="flex items-center space-x-3">
+                    <i class="fa-solid fa-folder-open text-gold-400 text-xl"></i>
+                    <div>
+                        <h3 class="text-lg font-serif font-bold text-white">Mauritius Muslim Rights Legal Toolkit</h3>
+                        <p class="text-[10px] font-mono text-gold-400">Bilingual Resource & Employment Request Templates</p>
+                    </div>
+                </div>
+                <button onclick="closeToolkitModal()" class="text-slate-400 hover:text-white transition-colors p-2">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="p-6 overflow-y-auto custom-scrollbar space-y-6 text-xs text-slate-300 leading-relaxed">
+                
+                <!-- Template Section -->
+                <div class="space-y-3">
+                    <h4 class="text-sm font-serif font-bold text-gold-400 flex items-center justify-between">
+                        <span>1. Formal Employment Request: Friday Prayer (Jummah) Accommodation</span>
+                        <button onclick="copyLeaveLetterTemplate()" class="text-[10px] font-mono bg-gold-400/10 hover:bg-gold-400 hover:text-slate-950 text-gold-400 px-2.5 py-1 rounded border border-gold-400/30 transition-colors">
+                            <i class="fa-solid fa-copy"></i> Copy Text
+                        </button>
+                    </h4>
+                    
+                    <textarea id="leave-letter-text" readonly class="w-full h-44 bg-slate-950 p-3 rounded-lg border border-white/10 font-mono text-[11px] text-slate-300 focus:outline-none custom-scrollbar">
+To: The Human Resources Manager / Employer
+Date: [Insert Date]
+Subject: Formal Request for Friday Prayer (Jummah) Workplace Accommodation
+
+Dear Sir/Madam,
+
+I am writing to formally request a slight adjustment to my break schedule on Fridays to fulfill my religious obligation for Friday congregational prayer (Jummah), in accordance with the spirit of Freedom of Conscience guaranteed under Section 11 of the Constitution of Mauritius and flexible working provisions under the Workers' Rights Act 2019.
+
+Specifically, I request an extended break on Fridays between 12:30 PM and 1:45 PM (or local mosque prayer time). I am fully committed to making up for any extended time by extending my work hours at the end of the day or adjusting my morning arrival, ensuring no disruption to operational duties.
+
+Thank you for your understanding and accommodation.
+
+Sincerely,
+[Your Name]
+[Your Department/Position]</textarea>
+                </div>
+
+                <!-- Bilingual Leaflet Excerpt -->
+                <div class="space-y-3 border-t border-white/10 pt-4">
+                    <h4 class="text-sm font-serif font-bold text-emerald-400">2. Bilingual Summary Leaflet (English & Mauritian Kreol)</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-[11px] p-4 rounded-xl bg-slate-950 border border-white/5">
+                        <div class="space-y-1">
+                            <span class="font-bold text-gold-400 font-mono uppercase block">English Version</span>
+                            <p class="text-slate-300 font-light">"Every Muslim in Mauritius has the constitutional right to practice their faith without discrimination at work or school. Ensure your Nikah is legally registered under the Civil Status Act to protect your family's civil rights."</p>
+                        </div>
+                        <div class="space-y-1">
+                            <span class="font-bold text-emerald-400 font-mono uppercase block">Version Kreol Morisien</span>
+                            <p class="text-slate-300 font-light">"Sega tou mizulman Moris ena drwa konstitisionel pou pratik so lafwa sans oken diskriminasion dan travay ouswa lekol. Segir ki zot Nikah anregistre swivan Civil Status Act pou protez drwa lafami."</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="p-4 bg-slate-950 border-t border-white/10 flex justify-between items-center text-xs text-slate-400">
+                <span>Bayt Al-Hikmah Empowerment Initiative</span>
+                <button onclick="closeToolkitModal()" class="px-4 py-2 rounded-lg bg-gold-400 hover:bg-gold-500 text-slate-950 font-semibold transition-colors">
+                    Close Toolkit
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- PAGE FOOTER SECTION -->
+    <footer class="bg-slate-950 border-t border-gold-400/20 text-slate-400 text-xs pt-16 pb-8 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-white/10">
+                
+                <div class="space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-600 to-yellow-400 flex items-center justify-center text-slate-950 font-bold text-sm">
+                            <i class="fa-solid fa-scale-balanced"></i>
+                        </div>
+                        <span class="text-lg font-serif font-bold text-white tracking-wide">Bayt Al-Hikmah</span>
+                    </div>
+                    <p class="text-slate-400 font-light leading-relaxed">
+                        Dedicated to empowering Muslim communities in Mauritius through civic awareness, legal clarity, and sound Islamic jurisprudence.
+                    </p>
+                </div>
+
+                <div class="space-y-3">
+                    <h3 class="text-sm font-serif font-bold text-white uppercase tracking-wider border-b border-white/10 pb-2">Quick Navigation</h3>
+                    <ul class="space-y-2 font-light">
+                        <li><a href="index.html" class="hover:text-gold-400 transition-colors"><i class="fa-solid fa-arrow-left text-[10px] mr-1"></i> Return to Main Platform</a></li>
+                        <li><a href="#civic-rights" class="hover:text-gold-400 transition-colors">Mauritian Constitutional Rights</a></li>
+                        <li><a href="#family-law" class="hover:text-gold-400 transition-colors">Civil Marriage & Islamic Wills</a></li>
+                        <li><a href="#fard-audit" class="hover:text-gold-400 transition-colors">Fard Kifayah Audit Tool</a></li>
+                    </ul>
+                </div>
+
+                <div class="space-y-3">
+                    <h3 class="text-sm font-serif font-bold text-white uppercase tracking-wider border-b border-white/10 pb-2">Mauritius Legal Sources</h3>
+                    <ul class="space-y-2 font-light">
+                        <li class="flex items-center space-x-2">
+                            <i class="fa-solid fa-shield-halved text-gold-400 text-[10px]"></i>
+                            <span>Constitution of Mauritius (Sec. 3 & 11)</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fa-solid fa-file-law text-gold-400 text-[10px]"></i>
+                            <span>Civil Status Act & Code Civil</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fa-solid fa-briefcase text-gold-400 text-[10px]"></i>
+                            <span>Workers' Rights Act 2019</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fa-solid fa-building text-gold-400 text-[10px]"></i>
+                            <span>Board of Waqf & Registrar of Assoc.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="space-y-3">
+                    <h3 class="text-sm font-serif font-bold text-white uppercase tracking-wider border-b border-white/10 pb-2">Empowerment Motto</h3>
+                    <blockquote class="bg-slate-900/80 p-4 rounded-xl border border-white/10 italic font-serif text-slate-300">
+                        "The best of people are those who are most beneficial to people."
+                    </blockquote>
+                    <p class="text-[11px] font-mono text-gold-400">Bayt Al-Hikmah Mauritius Archives</p>
+                </div>
+
+            </div>
+
+            <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-slate-500 text-xs space-y-4 sm:space-y-0">
+                <div class="flex items-center space-x-4 text-center text-xs font-mono tracking-wider">
+                    <div>&copy; 2026 <span class="font-arabic font-semibold tracking-widest text-white hover:text-gold-400 transition-colors">Bayt al Hikmah</span> | Empowering Mauritian Communities</div>
+                </div>
+                
+                <div class="flex items-center space-x-6">
+                    <a href="#" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-gold-400/30 bg-gold-400/10 text-gold-400 hover:bg-gold-400 hover:text-slate-950 transition-all text-xs font-mono font-semibold">
+                        <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i> AshadMauritiusIO
+                    </a>
+                    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="w-8 h-8 rounded-full bg-slate-900 border border-white/10 hover:border-gold-400 hover:text-gold-400 flex items-center justify-center transition-colors" title="Back to top">
+                        <i class="fa-solid fa-arrow-up text-xs"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE JAVASCRIPT ENGINE -->
+    <script>
+        // 1. Interactive Search & Filter Engine
+        function filterKnowledgeBase() {
+            const query = document.getElementById('global-search-input').value.toLowerCase();
+            const items = document.querySelectorAll('.searchable-item');
+            const feedback = document.getElementById('search-feedback');
+            let matchCount = 0;
+
+            items.forEach(item => {
+                const text = item.innerText.toLowerCase();
+                if (text.includes(query)) {
+                    item.style.display = 'block';
+                    matchCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            if (query.trim() !== '') {
+                feedback.classList.remove('hidden');
+                feedback.innerText = `Found ${matchCount} matching topic(s) across modules.`;
+            } else {
+                feedback.classList.add('hidden');
+            }
+        }
+
+        // 2. Fard Kifayah Audit Calculator Engine
+        function calculateAuditScore() {
+            const checkboxes = document.querySelectorAll('.audit-checkbox');
+            let checkedCount = 0;
+            checkboxes.forEach(cb => {
+                if (cb.checked) checkedCount++;
+            });
+
+            const total = checkboxes.length;
+            const percentage = Math.round((checkedCount / total) * 100);
+
+            const scoreDisplay = document.getElementById('audit-score-percentage');
+            const scoreStatus = document.getElementById('audit-score-status');
+            const scoreBar = document.getElementById('audit-score-bar');
+            const feedbackText = document.getElementById('audit-feedback-text');
+
+            scoreDisplay.innerText = percentage + '%';
+            scoreBar.style.width = percentage + '%';
+
+            if (percentage === 100) {
+                scoreStatus.innerText = 'Exemplary Communal Governance';
+                scoreStatus.className = 'text-xs font-mono uppercase text-emerald-400 font-bold tracking-wider';
+                feedbackText.innerText = 'Mashallah! Your local community or mosque fulfills all key Fard Kifayah communal obligations across religious, educational, social, and legal pillars.';
+            } else if (percentage >= 60) {
+                scoreStatus.innerText = 'Moderate / Satisfactory Standard';
+                scoreStatus.className = 'text-xs font-mono uppercase text-gold-400 font-bold tracking-wider';
+                feedbackText.innerText = 'Good baseline coverage, but specific gaps remain (e.g., formal legal audits or women/youth inclusion). Formulate an action plan to address unchecked items.';
+            } else if (percentage > 0) {
+                scoreStatus.innerText = 'Critical Communal Gaps Detected';
+                scoreStatus.className = 'text-xs font-mono uppercase text-amber-400 font-bold tracking-wider';
+                feedbackText.innerText = 'Essential communal duties are currently unfulfilled. The mosque committee and local leaders should prioritize setting up missing core services.';
+            } else {
+                scoreStatus.innerText = 'Unassessed / Critical Gaps';
+                scoreStatus.className = 'text-xs font-mono uppercase text-slate-400 tracking-wider';
+                feedbackText.innerText = 'Select the checkboxes representing fulfilled communal obligations in your local area to generate an instant governance rating.';
+            }
+        }
+
+        function resetAuditChecklist() {
+            document.querySelectorAll('.audit-checkbox').forEach(cb => cb.checked = false);
+            calculateAuditScore();
+        }
+
+        // 3. Generational Syllabus Tab Switcher
+        function switchAgeTab(tabKey) {
+            document.querySelectorAll('.age-tab-content').forEach(content => content.classList.add('hidden'));
+            document.querySelectorAll('.age-tab-btn').forEach(btn => {
+                btn.className = 'age-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all bg-slate-900 border border-white/10 text-slate-400 hover:text-white';
+            });
+
+            const activeContent = document.getElementById(`tab-content-${tabKey}`);
+            const activeBtn = document.getElementById(`tab-btn-${tabKey}`);
+
+            if (activeContent && activeBtn) {
+                activeContent.classList.remove('hidden');
+                activeBtn.className = 'age-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all bg-gold-400 text-slate-950';
+            }
+        }
+
+        // 4. Modal Controls & Copy Template Utility
+        function openToolkitModal() {
+            const modal = document.getElementById('toolkit-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+            }
+        }
+
+        function closeToolkitModal() {
+            const modal = document.getElementById('toolkit-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }
+        }
+
+        function copyLeaveLetterTemplate() {
+            const letterText = document.getElementById('leave-letter-text');
+            if (letterText) {
+                letterText.select();
+                document.execCommand('copy');
+                alert('Request letter template copied to clipboard!');
+            }
+        }
+
+        // Language selector direction toggle
+        document.getElementById('lang-selector').addEventListener('change', (e) => {
+            document.body.setAttribute('dir', e.target.value === 'ar' ? 'rtl' : 'ltr');
+        });
+
+        // ESC Key listener for modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeToolkitModal();
+        });
+    </script>
+</body>
+</html>
